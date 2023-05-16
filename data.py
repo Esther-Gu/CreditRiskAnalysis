@@ -123,30 +123,12 @@ pd_rf = y_pred_proba_rf[:, 1]
 print(pd_rf)
 
 
-### Question 1 ###
-# How does the probability of default payment 
-# vary by categories of different demographic variables?
+#### PD, LGD, EAD
+# Let's say we have these values for a single loan
+PD = 0.1  # Probability of Default
+EAD = 100000  # Exposure at Default
+LGD = 0.8  # Loss Given Default
 
-# I use use groupby() function to group the data by different categories
-# and calculate the mean default rate in each category
-
-print(df.groupby('EDUCATION')['default.payment.next.month'].mean())
-
-### Question 2 ###   
-# Which variables are the strongest predictors of default payment?
-
-# I use a machine learning model--random forest--to check feature importances
-# define the features and target
-X = df.drop('default.payment.next.month', axis=1)
-y = df['default.payment.next.month']
-
-# create and fit the model
-model = RandomForestClassifier(random_state=1)
-model.fit(X, y)
-
-# print the feature importances
-importances = model.feature_importances_
-for feature, importance in zip(X.columns, importances):
-    print(f'{feature}: {importance}')
-
-### ### ### ### ### ### ### ### ### ### ### ### 
+# Calculate Expected Loss
+EL = PD * EAD * LGD
+print(f'Expected Loss: {EL}')
