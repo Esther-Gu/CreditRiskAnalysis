@@ -300,6 +300,12 @@ print(pd_lr)
 [0.48984944 0.4963408  0.53159706 ... 0.52488158 0.46814057 0.48200682]
 ```
 
+The method predict_proba() is called on the logistic regression model. This method returns the probabilities of the possible outcomes—in this case, credit default ("default") and no credit default ("non-default")—for each instance in the testing set X_test. The result is a 2-dimensional array, where each row corresponds to an instance from X_test and each column corresponds to a possible outcome. The first column is the probability of the negative class ("non-default") and the second column is the probability of the positive class ("default").
+We're using NumPy indexing to select all the rows of the second column from y_pred_proba_lr (remember, indexing starts from 0 in Python, so 1 corresponds to the second column). This column represents the probabilities of default, which is what we're interested in. We're storing these probabilities in pd_lr.
+We're simply printing out these probabilities to the console. pd_lr is a 1-dimensional array where each value is the predicted probability of default for a corresponding instance in the test set.
+So in the context of credit risk modeling, this piece of code allows us to estimate the probability that a given customer will default on their credit, based on the information available to us in the testing dataset. This is a critical piece of information that financial institutions use to manage their credit risk.
+
+
 Feature Importance
 ```python
 importances_log_reg = abs(log_reg.coef_[0]) # Get absolute values of coefficients
@@ -332,6 +338,11 @@ Here is a ROC curve that plots the True Positive Rate (TPR) against the False Po
 
 The area under the curve (AUC) provides a measure of how well the model is capable of distinguishing between classes. 
 Higher the AUC, better the model is at predicting 0s as 0s and 1s as 1s.
+
+The orange line representsmodel's performance. The closer the orange curve is to the top left corner, the better the model's performance.
+The blue line represents a random classifier (a classifier that makes random predictions without any intelligence). It's a baseline to compare your model against. Ideally, a model should perform significantly better than this random classifier. So the orange curve should be far above this blue line.
+The Area Under the Curve (AUC) measures the entire two-dimensional area underneath the entire ROC curve from (0,0) to (1,1). AUC provides an aggregate measure of performance across all possible classification thresholds. A model whose predictions are 100% correct has an AUC of 1.0; a model whose predictions are 100% wrong has an AUC of 0.0.
+
 
 # Random Forest Model <a name="random-forest-model"></a>
 
@@ -370,7 +381,6 @@ weighted avg       0.78      0.78      0.78      6000
 The accuracy of the Random Forest model is 78%, which is higher than the Logistic Regression model.
 The precision for predicting non-default (0) is also high at 86%, and it's significantly better for predicting default (1) with a precision of 50%.
 The recall for non-default predictions is 87%, and for default predictions is 49%. Again, this model shows a better performance in identifying both non-default and default cases.
-As for the feature importance, the coefficients from the Logistic Regression model are hard to interpret directly due to their small magnitudes. However, the signs of the coefficients indicate the direction of the relationship with the default risk. For instance, a positive sign means that as the feature value increases, the default risk also increases, and vice versa. In this case, the repayment status (PAY_0 to PAY_6) and the bill amounts (BILL_AMT1 to BILL_AMT6) seem to have a considerable impact on the default risk.
 
 
 Probability of Default (PD)
