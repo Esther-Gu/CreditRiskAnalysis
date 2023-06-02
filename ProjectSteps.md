@@ -101,7 +101,7 @@ dtype: int64
 ```
 
 Unreasonable Values
-I  combine the "unknown" categories in the 'EDUCATION' variable. Because from data description, we know 4=others, 5=unknown, 6=unknown. 
+
 
 ```python
 print(df.EDUCATION.value_counts())
@@ -118,7 +118,7 @@ EDUCATION
 0       14
 Name: count, dtype: int64
 ```
-So I replaced categories 0, 5, and 6 with 4 (indicating "others").
+I combine the "unknown" categories in the 'EDUCATION' variable, replacing categories 0, 5, and 6 with 4 (indicating "others").. Because from data description, we know 4=others, 5=unknown, 6=unknown. 
 
 ```python
 df['EDUCATION'].replace({0:4, 5:4, 6:4}, inplace=True)
@@ -174,7 +174,6 @@ corr_matrix = df.corr()
 sns.heatmap(corr_matrix)
 plt.show()
 ```
-Here is a heatmap of the correlation matrix:
 ![Heatmap of the correlation matrix](./correlation_heatmap.png)
 
 
@@ -182,7 +181,8 @@ Here is a heatmap of the correlation matrix:
 sns.boxplot(x='EDUCATION', y='LIMIT_BAL', data=df)
 plt.show()
 ```
-Boxplot of Amount of Given Credit by Education Levels
+
+
 Here is a boxplot showing the distribution of the limited balance for different education levels
 ![Boxplot of limited balance for different education levels](./boxplot_education_limit_bal.png)
 
@@ -195,8 +195,8 @@ plt.show()
 Here is a boxplot showing the distribution of the limited balance for different marriage statuses: 
 ![Boxplot of limited balance for different marriage statuses](./boxplot_marriage_limit_bal.png)
 
-Barplot of Average Default Rate by Education Levels
-Calculate the mean default rate for each group
+
+
 ```
 plt.figure(figsize=(10,7))
 sns.barplot(x='EDUCATION', y='default.payment.next.month', data=df)
@@ -340,6 +340,9 @@ f_importances_log_reg.plot(x='Features', y='Importance', kind='bar', figsize=(16
 plt.tight_layout()
 plt.show()
 ```
+
+Here is a plot of feature importances of the Logistic Regression Model
+![Feature importances](./FeatureImportances_LogReg.png)
 
 ROC Curve
 ```python
