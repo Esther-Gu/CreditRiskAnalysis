@@ -262,13 +262,6 @@ Classification Report
 ```python
 # Evaluate the model
 print(classification_report(y_test, y_pred_lr))
-
-# Get the coefficients
-coefficients = log_reg.coef_
-# Convert the coefficients into one-dimensional 1darray with corresponding df column names as axis labels
-coeff_series = pd.Series(coefficients[0], df.columns[:-1])
-# Show the coefficients
-print(coeff_series)
 ```
 
 ```output
@@ -282,30 +275,7 @@ Name: count, dtype: int64
    macro avg       0.56      0.58      0.57      6000
 weighted avg       0.71      0.68      0.69      6000
 
-LIMIT_BAL   -3.422496e-08
-SEX         -1.451107e-09
-EDUCATION    7.838366e-09
-MARRIAGE    -2.178745e-09
-AGE          5.321578e-09
-PAY_0        7.407113e-08
-PAY_2        6.198363e-08
-PAY_3        5.356507e-08
-PAY_4        4.978942e-08
-PAY_5        4.370968e-08
-PAY_6        4.052314e-08
-BILL_AMT1   -7.950770e-06
-BILL_AMT2    6.047089e-06
-BILL_AMT3    2.172381e-06
-BILL_AMT4   -6.944471e-07
-BILL_AMT5    1.524004e-06
-BILL_AMT6    3.622442e-06
-PAY_AMT1    -2.183525e-05
-PAY_AMT2    -2.080986e-05
-PAY_AMT3    -6.091219e-06
-PAY_AMT4    -9.870264e-06
-PAY_AMT5    -8.258503e-06
-PAY_AMT6    -5.657247e-06
-dtype: float64
+
 ```
 
 Logistic Regression Model:
