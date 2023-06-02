@@ -280,7 +280,9 @@ weighted avg       0.71      0.68      0.69      6000
 
 Logistic Regression Model:
 The accuracy of the Logistic Regression model is 68%.
+
 The precision for predicting non-default (0) is fairly high at 82%, indicating that when the model predicts non-default, it's correct 82% of the time. However, the precision for predicting default (1) is quite low at 31%, which means the model isn't as reliable when it predicts a default.
+
 The recall, or sensitivity, for non-default predictions is 76%, and for default predictions is 39%. This means the model correctly identifies 76% of the non-default cases and 39% of the default cases.
 
 Probability of Default (PD)
@@ -301,8 +303,10 @@ print(pd_lr)
 ```
 
 The method predict_proba() is called on the logistic regression model. This method returns the probabilities of the possible outcomes—in this case, credit default ("default") and no credit default ("non-default")—for each instance in the testing set X_test. The result is a 2-dimensional array, where each row corresponds to an instance from X_test and each column corresponds to a possible outcome. The first column is the probability of the negative class ("non-default") and the second column is the probability of the positive class ("default").
+
 We're using NumPy indexing to select all the rows of the second column from y_pred_proba_lr (remember, indexing starts from 0 in Python, so 1 corresponds to the second column). This column represents the probabilities of default, which is what we're interested in. We're storing these probabilities in pd_lr.
 We're simply printing out these probabilities to the console. pd_lr is a 1-dimensional array where each value is the predicted probability of default for a corresponding instance in the test set.
+
 So in the context of credit risk modeling, this piece of code allows us to estimate the probability that a given customer will default on their credit, based on the information available to us in the testing dataset. This is a critical piece of information that financial institutions use to manage their credit risk.
 
 
@@ -340,7 +344,9 @@ The area under the curve (AUC) provides a measure of how well the model is capab
 Higher the AUC, better the model is at predicting 0s as 0s and 1s as 1s.
 
 The orange line representsmodel's performance. The closer the orange curve is to the top left corner, the better the model's performance.
+
 The blue line represents a random classifier (a classifier that makes random predictions without any intelligence). It's a baseline to compare your model against. Ideally, a model should perform significantly better than this random classifier. So the orange curve should be far above this blue line.
+
 The Area Under the Curve (AUC) measures the entire two-dimensional area underneath the entire ROC curve from (0,0) to (1,1). AUC provides an aggregate measure of performance across all possible classification thresholds. A model whose predictions are 100% correct has an AUC of 1.0; a model whose predictions are 100% wrong has an AUC of 0.0.
 
 
