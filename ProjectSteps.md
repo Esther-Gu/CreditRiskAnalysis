@@ -52,7 +52,7 @@ df = pd.read_csv("data.csv")
 ```
 
 ## Checking Statistics <a name="checking-statistics"></a>
-### Missing Values
+Missing Values
 ```python
 # Check the data
 print(df.head())
@@ -100,7 +100,7 @@ default.payment.next.month    0
 dtype: int64
 ```
 
-### Unreasonable Values
+Unreasonable Values
 I  combine the "unknown" categories in the 'EDUCATION' variable. Because from data description, we know 4=others, 5=unknown, 6=unknown. 
 
 ```python
@@ -157,7 +157,7 @@ MARRIAGE
 
 ## Data Visualization <a name="data-visualization"></a>
 
-### Histogram
+Histogram
 ```python
 # Data visualization
 df.hist(bins=50, figsize=(20,15))
@@ -168,7 +168,7 @@ Here is a histogram of my data:
 ![Histogram of data](https://github.com/Esther-Gu/CreditRiskAnalysis/blob/main/histogram.png?raw=true)
 
 
-### Heatmap of the Correlation Matrix
+Heatmap of the Correlation Matrix
 ```
 corr_matrix = df.corr()
 sns.heatmap(corr_matrix)
@@ -182,7 +182,7 @@ Here is a heatmap of the correlation matrix:
 sns.boxplot(x='EDUCATION', y='LIMIT_BAL', data=df)
 plt.show()
 ```
-### Boxplot of Amount of Given Credit by Education Levels
+Boxplot of Amount of Given Credit by Education Levels
 Here is a boxplot showing the distribution of the limited balance for different education levels
 ![Boxplot of limited balance for different education levels](./boxplot_education_limit_bal.png)
 
@@ -195,7 +195,7 @@ plt.show()
 Here is a boxplot showing the distribution of the limited balance for different marriage statuses: 
 ![Boxplot of limited balance for different marriage statuses](./boxplot_marriage_limit_bal.png)
 
-### Barplot of Average Default Rate by Education Levels
+Barplot of Average Default Rate by Education Levels
 Calculate the mean default rate for each group
 ```
 plt.figure(figsize=(10,7))
@@ -209,7 +209,7 @@ Here is a bar plot showing the mean default rate for each education level:
 
 
 ## Model Training Preparation <a name="model-training-preparation"></a>
-### Data scaling
+Data scaling
 
 This step includes one-hot encoding of categorical variables and scaling of numerical variables.
 
@@ -225,7 +225,7 @@ df[['LIMIT_BAL', 'AGE']] = scaler.fit_transform(df[['LIMIT_BAL', 'AGE']])
 X = df.drop('default.payment.next.month', axis=1)
 y = df['default.payment.next.month']
 ```
-### Train-Test Split and Balancing Data <a name="train-test-split-and-balancing-data"></a>
+Train-Test Split and Balancing Data <a name="train-test-split-and-balancing-data"></a>
 
 The data is split into training and test sets, and the training set is balanced using SMOTE.
 
@@ -258,7 +258,7 @@ y_pred_lr = log_reg.predict(X_test)
 ## Model Evaluation <a name="logistic-model-evaluation"></a>
 
 
-### Classification Report
+Classification Report
 ```python
 # Evaluate the model
 print(classification_report(y_test, y_pred_lr))
@@ -313,7 +313,7 @@ The accuracy of the Logistic Regression model is 68%.
 The precision for predicting non-default (0) is fairly high at 82%, indicating that when the model predicts non-default, it's correct 82% of the time. However, the precision for predicting default (1) is quite low at 31%, which means the model isn't as reliable when it predicts a default.
 The recall, or sensitivity, for non-default predictions is 76%, and for default predictions is 39%. This means the model correctly identifies 76% of the non-default cases and 39% of the default cases.
 
-### Probability of Default (PD)
+Probability of Default (PD)
 ```python
 # Probability of Default (PD)
 y_pred_proba_lr = log_reg.predict_proba(X_test)
@@ -330,7 +330,7 @@ print(pd_lr)
 [0.48984944 0.4963408  0.53159706 ... 0.52488158 0.46814057 0.48200682]
 ```
 
-### Feature Importance
+Feature Importance
 ```python
 importances_log_reg = abs(log_reg.coef_[0]) # Get absolute values of coefficients
 f_importances_log_reg = pd.Series(importances_log_reg, df.columns[:-1])
@@ -341,7 +341,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-### ROC Curve
+ROC Curve
 ```python
 ##ROC curve illustrates the diagnostic ability of a binary classifier system as its discrimination threshold is varied
 #It plots the True Positive Rate (TPR) against the False Positive Rate (FPR) at various threshold settings. 
@@ -377,9 +377,7 @@ rf.fit(X_train, y_train)
 y_pred_rf = rf.predict(X_test)
 ```
 ## Model Evaluation <a name="random-forest-model-evaluation"></a>
-
-
-### Classification Report
+Classification Report
 ```python
 # Evaluate the model
 print(classification_report(y_test, y_pred_rf))
@@ -402,7 +400,7 @@ The recall for non-default predictions is 87%, and for default predictions is 49
 As for the feature importance, the coefficients from the Logistic Regression model are hard to interpret directly due to their small magnitudes. However, the signs of the coefficients indicate the direction of the relationship with the default risk. For instance, a positive sign means that as the feature value increases, the default risk also increases, and vice versa. In this case, the repayment status (PAY_0 to PAY_6) and the bill amounts (BILL_AMT1 to BILL_AMT6) seem to have a considerable impact on the default risk.
 
 
-### Probability of Default (PD)
+Probability of Default (PD)
 ```python
 # How the probability of default payment varies by demographic variables?
 # Get feature importances in Random Forest model
