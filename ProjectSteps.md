@@ -225,8 +225,12 @@ df[['LIMIT_BAL', 'AGE']] = scaler.fit_transform(df[['LIMIT_BAL', 'AGE']])
 X = df.drop('default.payment.next.month', axis=1)
 y = df['default.payment.next.month']
 ```
-Train-Test Split and Balancing Data <a name="train-test-split-and-balancing-data"></a>
+One-Hot Encoding is applied to categorical variables to convert them into a format that could be provided to the machine learning algorithms to improve prediction performance.
 
+Standard scaling is important because it brings all the numerical variables to a similar scale, removing the issue of certain variables dominating others due to their size. This is especially important for models such as Logistic Regression that use Euclidean distance or hyperplanes for making decisions. 
+
+
+Train-Test Split and Balancing Data <a name="train-test-split-and-balancing-data"></a>
 The data is split into training and test sets, and the training set is balanced using SMOTE.
 
 ```python
@@ -237,6 +241,28 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random
 smote = SMOTE()
 X_train, y_train = smote.fit_resample(X_train, y_train)
 ```
+
+Synthetic Minority Over-sampling Technique (SMOTE) is a technique used to address class imbalance by generating synthetic examples in the feature space of the minority class. 
+
+The idea is to generate more instances of the minority class so that a predictive model has more examples to learn from, hopefully leading to improved performance.
+
+This makes the classifier more attentive to the minority class by making it more representative. Class imbalance can lead to poor classification performance, especially for the minority class, which is often the class of interest.
+
+Some difficulties that may arise when using SMOTE could be the risk of overfitting due to the generation of synthetic examples and a possible increase in false positives.If the model performs well on the training data but significantly worse on the validation data, it's likely overfitting
+
+To deal with overfitting, I may use cross-validation. By partitioning the original sample into a training set to train the model, and a validation set to evaluate it, cross-validation provides a more accurate way to measure a model’s predictive power.
+
+Hyperparameter tuning
+```python
+from sklearn.model_selection import GridSearchCV
+from sklearn.ensemble import RandomForestClassifier
+parameters = {'n_estimators':[50,100,200], 'max_depth':[2,5,7,9]}
+rf = RandomForestClassifier()
+clf = GridSearchCV(rf, parameters, cv=5)
+clf.fit(X_train, y_train)
+```
+Hyperparameter tuning is the process of adjusting the parameters of the machine learning model to improve its performance.
+
 
 # Logistic Regression Model <a name="logistic-regression-model"></a>
 A Logistic Regression model is trained, and predictions are made on the test data. The performance of the model is evaluated.
@@ -279,11 +305,19 @@ weighted avg       0.71      0.68      0.69      6000
 ```
 
 Logistic Regression Model:
-The accuracy of the Logistic Regression model is 68%.
+The accuracy of the Logistic Regression model is 68%. Accuracy is the proportion of true results among the total number of cases examined. It measures the model's overall effectiveness.
 
-The precision for predicting non-default (0) is fairly high at 82%, indicating that when the model predicts non-default, it's correct 82% of the time. However, the precision for predicting default (1) is quite low at 31%, which means the model isn't as reliable when it predicts a default.
+The precision for predicting non-default (0) is fairly high at 82%, indicating that when the model predicts non-default, it's correct 82% of the time. Precision is the ratio of correctly predicted positive observations to the total predicted positive observations. 
 
-The recall, or sensitivity, for non-default predictions is 76%, and for default predictions is 39%. This means the model correctly identifies 76% of the non-default cases and 39% of the default cases.
+The recall, or sensitivity, for non-default predictions is 76%. This means the model correctly identifies 76% of the non-default cases and 39% of the default cases.
+
+However, for default (1), the precision and recall are quite low (0.31 and 0.39 respectively), indicating that the model struggles to correctly identify and predict default instances.
+
+We need to look into different strategies for dealing with class imbalance, such as oversampling the minority class, undersampling the majority class, or using a different classification algorithm that is more robust to class imbalance.
+
+The F1 score is the weighted average of Precision and Recall. 
+
+The support is simply the number of instances of each class in the provided dataset. 
 
 Probability of Default (PD)
 ```python
@@ -324,6 +358,10 @@ plt.show()
 Here is a plot of feature importances of the Logistic Regression Model
 ![Feature importances](./FeatureImportances_LogReg.png)
 
+I used the coefficients of the logistic regression model to measure feature importance. This is done by taking the absolute value of each coefficient, which represents the change in the log-odds of the target for each one-unit change in the corresponding feature.
+
+The absolute values are then converted into a pandas series, sorted in descending order, and visualized in a bar plot. This way, the most influential features for prediction are easily identifiable.
+
 ROC Curve
 ```python
 ##ROC curve illustrates the diagnostic ability of a binary classifier system as its discrimination threshold is varied
@@ -347,12 +385,14 @@ The orange line representsmodel's performance. The closer the orange curve is to
 
 The blue line represents a random classifier (a classifier that makes random predictions without any intelligence). It's a baseline to compare your model against. Ideally, a model should perform significantly better than this random classifier. So the orange curve should be far above this blue line.
 
-The Area Under the Curve (AUC) measures the entire two-dimensional area underneath the entire ROC curve from (0,0) to (1,1). AUC provides an aggregate measure of performance across all possible classification thresholds. A model whose predictions are 100% correct has an AUC of 1.0; a model whose predictions are 100% wrong has an AUC of 0.0.
-
 
 # Random Forest Model <a name="random-forest-model"></a>
 
 Similarly, a Random Forest model is trained and evaluated.
+
+Logistic Regression is a parametric model and assumes a linear relationship between the log odds of the target and the input features. It's simpler, easier to interpret, and performs well when this linearity assumption holds. However, when the relationships in the data are complex and non-linear, Logistic Regression might struggle.
+
+Random Forest, on the other hand, is a non-parametric model. It's an ensemble method that combines multiple decision trees and is very effective in handling high-dimensional data. It can model complex non-linear relationships, capture interactions between features, and is less prone to overfitting due to its ensemble nature.
 
 ## Model Training <a name="random-forest-model-training"></a>
 
@@ -385,7 +425,9 @@ print(classification_report(y_test, y_pred_rf))
 weighted avg       0.78      0.78      0.78      6000
 ```
 The accuracy of the Random Forest model is 78%, which is higher than the Logistic Regression model.
+
 The precision for predicting non-default (0) is also high at 86%, and it's significantly better for predicting default (1) with a precision of 50%.
+
 The recall for non-default predictions is 87%, and for default predictions is 49%. Again, this model shows a better performance in identifying both non-default and default cases.
 
 
